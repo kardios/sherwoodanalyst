@@ -50,7 +50,7 @@ if raw_text.strip() != "":
     output_text = response.choices[0].message.content
     end = time.time()
 
-  with st.expander("Sherwood Analyst", expander = True):
+  with st.expander("Sherwood Analyst", expanded = True):
     st.write(output_text)
     st.write("Time to generate: " + str(round(end-start,2)) + " seconds")
   
