@@ -23,7 +23,7 @@ Option_Input = st.selectbox("How will I receive your input?", ('Upload a pdf','E
 instruction = "Read the input below. Analyse the implications at the regional and international level."
 
 if Option_Input == "Upload a pdf":
-  uploaded_file = st.file_uploader("Upload a PDF to summarise or analyse:", type = "pdf")
+  uploaded_file = st.file_uploader("Upload a PDF to analyse:", type = "pdf")
   raw_text = ""
   if uploaded_file is not None:
     try:
@@ -37,7 +37,7 @@ if Option_Input == "Upload a pdf":
       st.error(" Error occurred when loading document", icon="🚨")
 elif Option_Input == "Enter free text":
   raw_text = ""
-  input_text = st.text_area("Enter the text you would like me to summarize or analyse and click **Let\'s Go :rocket:**")
+  input_text = st.text_area("Enter the text you would like me to analyse and click **Let\'s Go! :desktop_computer:**")
   if st.button("Let\'s Go! :desktop_computer:"):
     raw_text = input_text + "\n..."
 
