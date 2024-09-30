@@ -46,16 +46,16 @@ if raw_text.strip() != "":
     with st.spinner("Running AI Model..."):
       start = time.time()
       input = instruction + "\n\n" + raw_text
-      Model_Option == "o1-preview":
       response = client.chat.completions.create(model="o1-preview", 
                                                 messages=[{"role": "user", "content": input}])
       output_text = response.choices[0].message.content
       end = time.time()
 
-    container = st.container(border=True)
-    container.write(output_text)
-    container.write("Time to generate: " + str(round(end-start,2)) + " seconds")
-    bot.send_message(chat_id=recipient_user_id, text="Sherwood Analyst")
+    with st.expander("Sherwood Analyst", expander = True):
+      st.write(output_text)
+      st.write("Time to generate: " + str(round(end-start,2)) + " seconds")
     st_copy_to_clipboard(output_text)
+    
+    bot.send_message(chat_id=recipient_user_id, text="Sherwood Analyst")
   except:
     st.error(" Error occurred when running model", icon="🚨")
