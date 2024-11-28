@@ -45,7 +45,7 @@ if st.button("Let\'s Go! :rocket:") and research_topic.strip()!="":
 
     start = time.time()
     input = research_topic
-    response = openai.chat.completion.create(model="o1-preview", messages=[{"role": "user", "content": input}])
+    response = openai.chat.completions.create(model="o1-preview", messages=[{"role": "user", "content": input}])
     o1_preview_raw = response.choices[0].message.content
     end = time.time()
     with st.expander("Raw o1-preview output"):
