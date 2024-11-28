@@ -5,7 +5,7 @@ import telebot
 from anthropic import Anthropic, HUMAN_PROMPT, AI_PROMPT
 import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
-from openai import OpenAI
+import openai
 from st_copy_to_clipboard import st_copy_to_clipboard
 
 # Set up Telegram Bot
@@ -18,7 +18,7 @@ CLIENT_API_KEY = os.environ["OPENAI_API_KEY"]
 CLAUDE_API_KEY = os.environ["ANTHROPIC_API_KEY"]
 GEMINI_API_KEY = os.environ["GOOGLE_API_KEY"]
 
-client = OpenAI(api_key=CLIENT_API_KEY)
+openai.api_key = CLIENT_API_KEY
 anthropic = Anthropic(api_key=CLAUDE_API_KEY)
 genai.configure(api_key=GEMINI_API_KEY)
 
@@ -45,7 +45,7 @@ if st.button("Let\'s Go! :rocket:") and research_topic.strip()!="":
 
     start = time.time()
     input = research_topic
-    response = client.chat.completions.create(model="o1-preview", messages=[{"role": "user", "content": input}])
+    response = openai.chat.completions.create(model="o1-preview", messages=[{"role": "user", "content": input}])
     o1_preview_raw = response.choices[0].message.content
     end = time.time()
     with st.expander("Raw o1-preview output"):
@@ -56,7 +56,7 @@ if st.button("Let\'s Go! :rocket:") and research_topic.strip()!="":
 
     start = time.time()
     input = "Rewrite the answer below into a series of paragraphs, without headings:\n\n" + research_topic
-    response = client.chat.completions.create(model="gpt-4o-2024-11-20", messages=[{"role": "user", "content": input}])
+    response = openai.chat.completions.create(model="gpt-4o-2024-11-20", messages=[{"role": "user", "content": input}])
     rewrite_raw = response.choices[0].message.content
     end = time.time()
     with st.expander("Raw gpt-4o rewritten"):
@@ -80,7 +80,7 @@ if st.button("Let\'s Go! :rocket:") and research_topic.strip()!="":
     input = "Update <answer> with <research>:\n\n"
     input = input + "<answer>\n\n" + rewrite_raw + "\n\n</answer>\n\n"
     input = input + "<research>\n\n" + research_raw + "\n\n</research>\n\n"
-    response = client.chat.completions.create(model="gpt-4o-2024-11-20", messages=[{"role": "user", "content": input}])
+    response = openai.chat.completions.create(model="gpt-4o-2024-11-20", messages=[{"role": "user", "content": input}])
     updated_answer = response.choices[0].message.content
     end = time.time()
     with st.expander("Updated answer"):
