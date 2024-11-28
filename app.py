@@ -14,7 +14,7 @@ bot_token = os.environ['BOT_TOKEN']
 bot = telebot.TeleBot(bot_token)
 
 # Retrieve the API keys from the environment variables
-CLIENT_API_KEY = os.environ['OPENAI_API_KEY']
+CLIENT_API_KEY = os.environ["OPENAI_API_KEY"]
 CLAUDE_API_KEY = os.environ["ANTHROPIC_API_KEY"]
 GEMINI_API_KEY = os.environ["GOOGLE_API_KEY"]
 
