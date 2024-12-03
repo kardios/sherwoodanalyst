@@ -77,9 +77,22 @@ if st.button("Let\'s Go! :rocket:") and research_topic.strip()!="":
     st.snow()
 
     start = time.time()
-    input = "Update <answer> with <research>:\n\n"
+    input = "Read the answer contained within the <answer> tags. Use the information contained within the <research> tags to produce an updated answer.\n\n" 
     input = input + "<answer>\n\n" + rewrite_raw + "\n\n</answer>\n\n"
     input = input + "<research>\n\n" + research_raw + "\n\n</research>\n\n"
+    response = openai.chat.completions.create(model="gpt-4o-2024-11-20", messages=[{"role": "user", "content": input}])
+    updated_answer = response.choices[0].message.content
+    end = time.time()
+    with st.expander("Updated answer"):
+      st.markdown(updated_answer)
+      st.write("Time to generate: " + str(round(end-start,2)) + " seconds")
+      st_copy_to_clipboard(updated_answer)
+    st.snow()
+
+    start = time.time()
+    input = "Read the answer contained within the <answer> tags and the updated answer contained within the <updated_answer> tags. Compare them and assess which is better.\n\n"
+    input = input + "<answer>\n\n" + rewrite_raw + "\n\n</answer>\n\n"
+    input = input + "<updated_answer>\n\n" + research_raw + "\n\n</updated_answer>\n\n"
     response = openai.chat.completions.create(model="gpt-4o-2024-11-20", messages=[{"role": "user", "content": input}])
     updated_answer = response.choices[0].message.content
     end = time.time()
