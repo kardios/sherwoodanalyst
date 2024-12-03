@@ -95,12 +95,12 @@ if st.button("Let\'s Go! :rocket:") and research_topic.strip()!="":
     input = input + "<answer>\n\n" + rewrite_raw + "\n\n</answer>\n\n"
     input = input + "<updated_answer>\n\n" + updated_answer + "\n\n</updated_answer>\n\n"
     response = openai.chat.completions.create(model="gpt-4o-2024-11-20", messages=[{"role": "user", "content": input}])
-    updated_answer = response.choices[0].message.content
+    compared_result = response.choices[0].message.content
     end = time.time()
     with st.expander("Comparison result"):
-      st.markdown(updated_answer)
+      st.markdown(compared_result)
       st.write("Time to generate: " + str(round(end-start,2)) + " seconds")
-      st_copy_to_clipboard(updated_answer)
+      st_copy_to_clipboard(compared_result)
     st.snow()
 
     start = time.time()
