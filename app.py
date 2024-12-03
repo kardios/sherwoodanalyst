@@ -77,7 +77,7 @@ if st.button("Let\'s Go! :rocket:") and research_topic.strip()!="":
     st.snow()
 
     start = time.time()
-    input = "Read the answer contained within the <answer> tags. Use the information contained within the <research> tags to produce an updated answer.\n\n" 
+    input = "Read the answer contained within the <answer> tags. Use the information contained within the <research> tags to produce an updated answer. Your output should be a series of paragraphs, without headings.\n\n" 
     input = input + "<answer>\n\n" + rewrite_raw + "\n\n</answer>\n\n"
     input = input + "<research>\n\n" + research_raw + "\n\n</research>\n\n"
     response = openai.chat.completions.create(model="gpt-4o-2024-11-20", messages=[{"role": "user", "content": input}])
