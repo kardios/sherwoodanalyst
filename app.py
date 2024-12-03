@@ -104,7 +104,7 @@ if st.button("Let\'s Go! :rocket:") and research_topic.strip()!="":
     st.snow()
 
     start = time.time()
-    input = "Check the accuracy of the report below:\n\n" + updated_answer
+    input = "Check the the report below and highlight any inaccuracies or biases:\n\n" + updated_answer
     gemini = genai.GenerativeModel("gemini-1.5-pro-002")
     response = gemini.generate_content(input, safety_settings = safety_settings, generation_config = generation_config, tools = "google_search_retrieval")
     verified_result = response.text
