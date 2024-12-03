@@ -93,7 +93,7 @@ if st.button("Let\'s Go! :rocket:") and research_topic.strip()!="":
     start = time.time()
     input = "Read the answer contained within the <answer> tags and the updated answer contained within the <updated_answer> tags. Compare them and assess which is better.\n\n"
     input = input + "<answer>\n\n" + rewrite_raw + "\n\n</answer>\n\n"
-    input = input + "<updated_answer>\n\n" + research_raw + "\n\n</updated_answer>\n\n"
+    input = input + "<updated_answer>\n\n" + updated_answer + "\n\n</updated_answer>\n\n"
     response = openai.chat.completions.create(model="gpt-4o-2024-11-20", messages=[{"role": "user", "content": input}])
     updated_answer = response.choices[0].message.content
     end = time.time()
