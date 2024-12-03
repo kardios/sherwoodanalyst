@@ -70,6 +70,7 @@ if st.button("Let\'s Go! :rocket:") and research_topic.strip()!="":
     gemini = genai.GenerativeModel("gemini-1.5-pro-002")
     response = gemini.generate_content(input, safety_settings = safety_settings, generation_config = generation_config, tools = "google_search_retrieval")
     research_raw = response.text
+    end = time.time()
     with st.expander("Raw research result"):
       st.markdown(research_raw)
       st.write("Time to generate: " + str(round(end-start,2)) + " seconds")
@@ -96,8 +97,20 @@ if st.button("Let\'s Go! :rocket:") and research_topic.strip()!="":
     response = openai.chat.completions.create(model="gpt-4o-2024-11-20", messages=[{"role": "user", "content": input}])
     updated_answer = response.choices[0].message.content
     end = time.time()
-    with st.expander("Updated answer"):
+    with st.expander("Comparison result"):
       st.markdown(updated_answer)
       st.write("Time to generate: " + str(round(end-start,2)) + " seconds")
       st_copy_to_clipboard(updated_answer)
+    st.snow()
+
+    start = time.time()
+    input = "Check the accuracy of the report below:\n\n" + updated_answer
+    gemini = genai.GenerativeModel("gemini-1.5-pro-002")
+    response = gemini.generate_content(input, safety_settings = safety_settings, generation_config = generation_config, tools = "google_search_retrieval")
+    verified_result = response.text
+    end = time.time()
+    with st.expander("Verification result"):
+      st.markdown(verified_result)
+      st.write("Time to generate: " + str(round(end-start,2)) + " seconds")
+      st_copy_to_clipboard(verified_result)
     st.snow()
