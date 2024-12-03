@@ -66,7 +66,7 @@ if st.button("Let\'s Go! :rocket:") and research_topic.strip()!="":
     st.snow()
 
     start = time.time()
-    input = "Research facts, trends and statistics relevant to the topic:\n\n" + research_topic
+    input = "Do research and provide updated statistics relevant to this topic:\n\n" + research_topic
     gemini = genai.GenerativeModel("gemini-1.5-pro-002")
     response = gemini.generate_content(input, safety_settings = safety_settings, generation_config = generation_config, tools = "google_search_retrieval")
     research_raw = response.text
