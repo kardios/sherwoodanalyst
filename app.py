@@ -58,7 +58,7 @@ if st.button("Let\'s Go! :rocket:") and research_topic.strip()!="":
     input = "Read the text contained in the <answer> tags. The text is meant to answer the research topic contained in the <research_topic> tags.\n\n"
     input = input + "Rewrite the text in the <answer> tags into a series of paragraphs, without headings. Ensure that your output maintains the content of the text, including the main ideas and key details.\n\n"
     input = input + "<research_topic>\n\n" + research_topic + "\n\n</research_topic>\n\n"
-    input = input + "<answer>\n\n" + o1_mini_output + "\n\n</answer>\n\n"
+    input = input + "<answer>\n\n" + o1_output + "\n\n</answer>\n\n"
     message = anthropic.messages.create(model = "claude-3-5-sonnet-20241022", max_tokens = 4096, temperature = 0, system= "", messages=[{"role": "user", "content": input}])
     anthropic_output = message.content[0].text
     end = time.time()
