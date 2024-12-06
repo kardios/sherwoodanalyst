@@ -55,20 +55,10 @@ if st.button("Let\'s Go! :rocket:") and research_topic.strip()!="":
     st.snow()
 
     start = time.time()
-    input = research_topic
-    response = openai.chat.completions.create(model="gpt-4o-2024-11-20", messages=[{"role": "user", "content": input}])
-    gpt4o_output = response.choices[0].message.content
-    end = time.time()
-    with st.expander("gpt-4o output"):
-      st.markdown(gpt4o_output)
-      st.write("Time to generate: " + str(round(end-start,2)) + " seconds")
-      st_copy_to_clipboard(gpt4o_output)
-    st.snow()
-
-    start = time.time()
-    input = "Read the answers contained in the <answer_1> and <answer_2> tags. Synthesize a new answer that integrates both answers. Try to maintain the content, especially the main ideas and key details in both answers. Present your output as a series of paragraphs, without headings.\n\n"
-    input = input + "<answer_1>\n\n" + o1_mini_output + "\n\n</answer_1>\n\n"
-    input = input + "<answer_2>\n\n" + gpt4o_output + "\n\n</answer_2>\n\n"
+    input = "Read the text contained in the <answer> tags. The text is meant to answer the research topic contained in the <research_topic> tags.\n\n"
+    input = input + "Rewrite the text in the <answer> tags into a series of paragraphs, without headings, and keeping the content.\n\n"
+    input = input + "<research_topic>\n\n" + research_topic + "\n\n</research_topic>\n\n"
+    input = input + "<answer>\n\n" + o1_mini_output + "\n\n</answer>\n\n"
     message = anthropic.messages.create(model = "claude-3-5-sonnet-20241022", max_tokens = 4096, temperature = 0, system= "", messages=[{"role": "user", "content": input}])
     anthropic_output = message.content[0].text
     end = time.time()
