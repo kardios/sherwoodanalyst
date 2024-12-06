@@ -69,7 +69,7 @@ if st.button("Let\'s Go! :rocket:") and research_topic.strip()!="":
     input = "Read the answers contained in the <answer_1> and <answer_2> tags. Synthesize a new answer that integrates both answers. Try to maintain the content, especially the main ideas and key details in both answers. Present your output as a series of paragraphs, without headings.\n\n"
     input = input + "<answer_1>\n\n" + o1_mini_output + "\n\n</answer_1>\n\n"
     input = input + "<answer_2>\n\n" + gpt4o_output + "\n\n</answer_2>\n\n"
-    anthropic.messages.create(model = "claude-3-5-sonnet-20241022", max_tokens = 4096, temperature = 0, system= "", messages=[{"role": "user", "content": input}])
+    message = anthropic.messages.create(model = "claude-3-5-sonnet-20241022", max_tokens = 4096, temperature = 0, system= "", messages=[{"role": "user", "content": input}])
     anthropic_output = message.content[0].text
     end = time.time()
     with st.expander("Claude 3.5 Sonnet output"):
