@@ -35,7 +35,7 @@ generation_config = genai.GenerationConfig(
 )
 
 st.set_page_config(page_title="Sherwood Analyst", page_icon=":desktop_computer:",)
-st.write("**Sherwood Analyst**, your smarter analyst")
+st.write("**Sherwood Analyst**, your smart analyst")
 
 research_topic = st.text_input("What is my research topic?", "Analyse the implications of Vietnam\'s Doi Moi reforms")
 
@@ -45,66 +45,41 @@ if st.button("Let\'s Go! :rocket:") and research_topic.strip()!="":
 
     start = time.time()
     input = research_topic
-    response = openai.chat.completions.create(model="o1", messages=[{"role": "user", "content": input}])
-    o1_preview_raw = response.choices[0].message.content
+    response = openai.chat.completions.create(model="o1-mini", messages=[{"role": "user", "content": input}])
+    o1_mini_output = response.choices[0].message.content
     end = time.time()
-    with st.expander("Raw o1-preview output"):
-      st.markdown(o1_preview_raw)
+    with st.expander("o1-mini output"):
+      st.markdown(o1_mini_output)
       st.write("Time to generate: " + str(round(end-start,2)) + " seconds")
-      st_copy_to_clipboard(o1_preview_raw)
+      st_copy_to_clipboard(o1_mini_output)
     st.snow()
 
     start = time.time()
-    input = "Rewrite the answer below into a series of paragraphs, without headings, while retaining the main ideas and key details:\n\n" + research_topic
+    input = research_topic
     response = openai.chat.completions.create(model="gpt-4o-2024-11-20", messages=[{"role": "user", "content": input}])
-    rewrite_raw = response.choices[0].message.content
+    gpt4o_output = response.choices[0].message.content
     end = time.time()
-    with st.expander("Raw gpt-4o rewritten"):
-      st.markdown(rewrite_raw)
+    with st.expander("gpt-4o output"):
+      st.markdown(gpt4o_output)
       st.write("Time to generate: " + str(round(end-start,2)) + " seconds")
-      st_copy_to_clipboard(rewrite_raw)
+      st_copy_to_clipboard(gpt4o_output)
     st.snow()
 
     start = time.time()
-    input = "Do research and provide updated statistics relevant to this topic:\n\n" + research_topic
-    gemini = genai.GenerativeModel("gemini-1.5-pro-002")
-    response = gemini.generate_content(input, safety_settings = safety_settings, generation_config = generation_config, tools = "google_search_retrieval")
-    research_raw = response.text
+    input = "Read the answers contained in the <answer_1> and <answer_2> tags. Synthesize a new answer that integrates both answers. Try to maintain the content, especially the main ideas and key details in both answers. Present your output as a series of paragraphs, without headings.\n\n"
+    input = input + "<answer_1>\n\n" + o1_mini_output + "\n\n</answer_1>\n\n"
+    input = input + "<answer_2>\n\n" + gpt4o_output + "\n\n</answer_2>\n\n"
+    anthropic.messages.create(model = "claude-3-5-sonnet-20241022", max_tokens = 4096, temperature = 0, system= "", messages=[{"role": "user", "content": input}])
+    anthropic_output = message.content[0].text
     end = time.time()
-    with st.expander("Raw research result"):
-      st.markdown(research_raw)
+    with st.expander("Claude 3.5 Sonnet output"):
+      st.markdown(anthropic_output)
       st.write("Time to generate: " + str(round(end-start,2)) + " seconds")
-      st_copy_to_clipboard(research_raw)
+      st_copy_to_clipboard(anthropic_output)
     st.snow()
 
     start = time.time()
-    input = "Read the answer contained within the <answer> tags. Use the information contained within the <research> tags to produce an updated answer. Your output should be a series of paragraphs, without headings, that keeps the main ideas and key details.\n\n" 
-    input = input + "<answer>\n\n" + rewrite_raw + "\n\n</answer>\n\n"
-    input = input + "<research>\n\n" + research_raw + "\n\n</research>\n\n"
-    response = openai.chat.completions.create(model="gpt-4o-2024-11-20", messages=[{"role": "user", "content": input}])
-    updated_answer = response.choices[0].message.content
-    end = time.time()
-    with st.expander("Updated answer"):
-      st.markdown(updated_answer)
-      st.write("Time to generate: " + str(round(end-start,2)) + " seconds")
-      st_copy_to_clipboard(updated_answer)
-    st.snow()
-
-    start = time.time()
-    input = "Read the answer contained within the <answer> tags and the updated answer contained within the <updated_answer> tags. Compare them and assess which is better.\n\n"
-    input = input + "<answer>\n\n" + rewrite_raw + "\n\n</answer>\n\n"
-    input = input + "<updated_answer>\n\n" + updated_answer + "\n\n</updated_answer>\n\n"
-    response = openai.chat.completions.create(model="gpt-4o-2024-11-20", messages=[{"role": "user", "content": input}])
-    compared_result = response.choices[0].message.content
-    end = time.time()
-    with st.expander("Comparison result"):
-      st.markdown(compared_result)
-      st.write("Time to generate: " + str(round(end-start,2)) + " seconds")
-      st_copy_to_clipboard(compared_result)
-    st.snow()
-
-    start = time.time()
-    input = "Check the the report below and highlight any inaccuracies or biases:\n\n" + updated_answer
+    input = "Check the the report below and highlight any inaccuracies or biases:\n\n" + anthropic_output
     gemini = genai.GenerativeModel("gemini-1.5-pro-002")
     response = gemini.generate_content(input, safety_settings = safety_settings, generation_config = generation_config, tools = "google_search_retrieval")
     verified_result = response.text
@@ -114,3 +89,4 @@ if st.button("Let\'s Go! :rocket:") and research_topic.strip()!="":
       st.write("Time to generate: " + str(round(end-start,2)) + " seconds")
       st_copy_to_clipboard(verified_result)
     st.snow()
+    
