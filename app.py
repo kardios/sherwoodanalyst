@@ -45,18 +45,18 @@ if st.button("Let\'s Go! :rocket:") and research_topic.strip()!="":
 
     start = time.time()
     input = research_topic
-    response = openai.chat.completions.create(model="o1-mini", messages=[{"role": "user", "content": input}])
-    o1_mini_output = response.choices[0].message.content
+    response = openai.chat.completions.create(model="o1-preview", messages=[{"role": "user", "content": input}])
+    o1_output = response.choices[0].message.content
     end = time.time()
-    with st.expander("o1-mini output"):
-      st.markdown(o1_mini_output)
+    with st.expander("o1 output"):
+      st.markdown(o1_output)
       st.write("Time to generate: " + str(round(end-start,2)) + " seconds")
-      st_copy_to_clipboard(o1_mini_output)
+      st_copy_to_clipboard(o1_output)
     st.snow()
 
     start = time.time()
     input = "Read the text contained in the <answer> tags. The text is meant to answer the research topic contained in the <research_topic> tags.\n\n"
-    input = input + "Rewrite the text in the <answer> tags into a series of paragraphs, without headings, and keeping the content.\n\n"
+    input = input + "Rewrite the text in the <answer> tags into a series of paragraphs, without headings. Ensure that your output maintains the content of the text, including the main ideas and key details.\n\n"
     input = input + "<research_topic>\n\n" + research_topic + "\n\n</research_topic>\n\n"
     input = input + "<answer>\n\n" + o1_mini_output + "\n\n</answer>\n\n"
     message = anthropic.messages.create(model = "claude-3-5-sonnet-20241022", max_tokens = 4096, temperature = 0, system= "", messages=[{"role": "user", "content": input}])
