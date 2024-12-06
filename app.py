@@ -69,6 +69,20 @@ if st.button("Let\'s Go! :rocket:") and research_topic.strip()!="":
     st.snow()
 
     start = time.time()
+    input = "Compare and contrast the two answers contained in the <answer_1> and <answer_2> tags. They are both meant to answer the research topic contained in the <research_topic> tags.\n\n"
+    input = input + "<research_topic>\n\n" + research_topic + "\n\n</research_topic>\n\n"
+    input = input + "<answer_1>n\n" + o1_output + "\n\n</answer_1>\n\n"
+    input = input + "<answer_2>n\n" + anthropic_output + "\n\n</answer_2>\n\n"
+    message = anthropic.messages.create(model = "claude-3-5-sonnet-20241022", max_tokens = 4096, temperature = 0, system= "", messages=[{"role": "user", "content": input}])
+    compare_output = message.content[0].text
+    end = time.time()
+    with st.expander("Comparison result"):
+      st.markdown(compare_output)
+      st.write("Time to generate: " + str(round(end-start,2)) + " seconds")
+      st_copy_to_clipboard(compare_output)
+    st.snow()
+
+    start = time.time()
     input = "Check the the report below and highlight any inaccuracies or biases:\n\n" + anthropic_output
     gemini = genai.GenerativeModel("gemini-1.5-pro-002")
     response = gemini.generate_content(input, safety_settings = safety_settings, generation_config = generation_config, tools = "google_search_retrieval")
