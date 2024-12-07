@@ -107,4 +107,29 @@ if st.button("Let\'s Go! :rocket:") and research_topic.strip()!="":
       st.write("Time to generate: " + str(round(end-start,2)) + " seconds")
       st_copy_to_clipboard(updated_result)
     st.snow()
-    
+
+    start = time.time()
+    input = "Compare and contrast the two answers contained in the <answer_1> and <answer_2> tags. They are both meant to answer the research topic contained in the <research_topic> tags.\n\n"
+    input = input + "<research_topic>\n\n" + research_topic + "\n\n</research_topic>\n\n"
+    input = input + "<answer_1>n\n" + anthropic_output + "\n\n</answer_1>\n\n"
+    input = input + "<answer_2>n\n" + updated_result + "\n\n</answer_2>\n\n"
+    message = anthropic.messages.create(model = "claude-3-5-sonnet-20241022", max_tokens = 8192, temperature = 0, system= "", messages=[{"role": "user", "content": input}])
+    recompare_output = message.content[0].text
+    end = time.time()
+    with st.expander("Re-Comparison result"):
+      st.markdown(recompare_output)
+      st.write("Time to generate: " + str(round(end-start,2)) + " seconds")
+      st_copy_to_clipboard(recompare_output)
+    st.snow()
+
+    start = time.time()
+    input = "Check the report below and highlight any inaccuracies or biases:\n\n" + updated_result
+    gemini = genai.GenerativeModel("gemini-1.5-pro-002")
+    response = gemini.generate_content(input, safety_settings = safety_settings, generation_config = generation_config, tools = "google_search_retrieval")
+    reverified_result = response.text
+    end = time.time()
+    with st.expander("Re-Verification result"):
+      st.markdown(reverified_result)
+      st.write("Time to generate: " + str(round(end-start,2)) + " seconds")
+      st_copy_to_clipboard(reverified_result)
+    st.snow()
