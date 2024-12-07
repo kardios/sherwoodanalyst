@@ -35,7 +35,7 @@ generation_config = genai.GenerationConfig(
 )
 
 st.set_page_config(page_title="Sherwood Analyst", page_icon=":desktop_computer:",)
-st.write("**Sherwood Analyst**, your smart analyst")
+st.write("**Sherwood Analyst**, your smarter analyst")
 
 research_topic = st.text_input("What is my research topic?", "Analyse the implications of Vietnam\'s Doi Moi reforms")
 
