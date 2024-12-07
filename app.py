@@ -73,7 +73,7 @@ if st.button("Let\'s Go! :rocket:") and research_topic.strip()!="":
     input = input + "<research_topic>\n\n" + research_topic + "\n\n</research_topic>\n\n"
     input = input + "<answer_1>n\n" + o1_output + "\n\n</answer_1>\n\n"
     input = input + "<answer_2>n\n" + anthropic_output + "\n\n</answer_2>\n\n"
-    message = anthropic.messages.create(model = "claude-3-5-sonnet-20241022", max_tokens = 4096, temperature = 0, system= "", messages=[{"role": "user", "content": input}])
+    message = anthropic.messages.create(model = "claude-3-5-sonnet-20241022", max_tokens = 8192, temperature = 0, system= "", messages=[{"role": "user", "content": input}])
     compare_output = message.content[0].text
     end = time.time()
     with st.expander("Comparison result"):
@@ -83,7 +83,7 @@ if st.button("Let\'s Go! :rocket:") and research_topic.strip()!="":
     st.snow()
 
     start = time.time()
-    input = "Check the the report below and highlight any inaccuracies or biases:\n\n" + anthropic_output
+    input = "Check the report below and highlight any inaccuracies or biases:\n\n" + anthropic_output
     gemini = genai.GenerativeModel("gemini-1.5-pro-002")
     response = gemini.generate_content(input, safety_settings = safety_settings, generation_config = generation_config, tools = "google_search_retrieval")
     verified_result = response.text
@@ -92,5 +92,19 @@ if st.button("Let\'s Go! :rocket:") and research_topic.strip()!="":
       st.markdown(verified_result)
       st.write("Time to generate: " + str(round(end-start,2)) + " seconds")
       st_copy_to_clipboard(verified_result)
+    st.snow()
+
+    start = time.time()
+    input = "Your task is to update the answer to a research topic, using the suggestions from an accuracy check. The research topic is in the <research_topic> tags. The answer is in the <answer> tags. Use the suggestions from the text contained in the <accuracy_check> tags to update the answer, while maintaining the overall structure of the answer.\n\n"
+    input = input + "<research_topic>\n\n" + research_topic + "\n\n</research_topic>\n\n"
+    input = input + "<answer>n\n" + anthropic_output + "\n\n</answer>\n\n"
+    input = input + "<accuracy_check>n\n" + verified_result + "\n\n</accuracy_check>\n\n"
+    message = anthropic.messages.create(model = "claude-3-5-sonnet-20241022", max_tokens = 8192, temperature = 0, system= "", messages=[{"role": "user", "content": input}])
+    updated_result = message.content[0].text
+    end = time.time()
+    with st.expander("Updated result"):
+      st.markdown(updated_result)
+      st.write("Time to generate: " + str(round(end-start,2)) + " seconds")
+      st_copy_to_clipboard(updated_result)
     st.snow()
     
